@@ -12,8 +12,20 @@ file_categories = {
 
 }
 
-path=input("Enter folder path: ")
-file_names=os.listdir(path)
+while True:
+     
+    path=input("Enter folder path: ")
+
+    try:
+         
+        file_names=os.listdir(path)
+        break
+
+    except FileNotFoundError:
+          
+          print("Folder not found.")
+          print("Please enter a valid folder path.")
+         
 
 
 for file_name in file_names:
