@@ -36,8 +36,16 @@ for file_name in file_names:
     destination_folder = os.path.join(path, category)
     os.makedirs(destination_folder, exist_ok=True)
     destination = os.path.join(destination_folder, file_name)
+
+    if os.path.exists(destination):
+          counter = 1
+
+    while os.path.exists(destination):
+        new_name = name + "_" + str(counter) + extension
+        destination = os.path.join(destination_folder, new_name)
+        counter += 1
     shutil.move(full_path, destination)
-    
+
     print(file_name, "→", category)
 
         
