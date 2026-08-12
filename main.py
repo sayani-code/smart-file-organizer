@@ -2,62 +2,98 @@
 import os
 import shutil
 
+
 file_categories = {
-
-   "Images":[".jpg" ,".png" ,".jpeg"],
-   "Documents":[".pdf" ,".txt" ,".docx"],
-   "Music":[".mp3",".wav"],
-   "Videos":[".mp4",".mkv"],
-   "Python":[".py"],
-
+    "Images":[".jpg" ,".png" ,".jpeg",".gif",".webp",".svg"],
+    "Documents":[".pdf" ,".txt" ,".docx",".doc",".xlsx",".pptx"],
+    "Music":[".mp3",".wav","..flac"],
+    "Videos":[".mp4",".mkv",".avi",".mov"],
+    "Coding_files":[".py",".c",".js",".cpp",".r",".html"],
+    "Archives":[".zip",".rar",".7z"]
 }
 
-while True:
+
+def get_folder_path():
+    while True:
      
-    path=input("Enter folder path: ")
+        path=input("Enter folder path: ")
 
-    try:
+        try:
          
-        file_names=os.listdir(path)
-        break
-
-    except FileNotFoundError:
-          
-          print("Folder not found.")
-          print("Please enter a valid folder path.")
-         
-
-
-for file_name in file_names:
-
-    full_path = os.path.join(path, file_name)
-    if not os.path.isfile(full_path):
-        continue
-
-    name,extension=os.path.splitext(file_name)
-    extension = extension.lower()
-    category = "Others"
-
-
-    for category_name in file_categories:
-            if extension in file_categories[category_name]:
-                category = category_name
-                break
-
+            file_names=os.listdir(path)
+            return path
             
-    destination_folder = os.path.join(path, category)
-    os.makedirs(destination_folder, exist_ok=True)
+
+        except FileNotFoundError:
+          
+            print("Folder not found.")
+            print("Please enter a valid folder path.")
+
+
+
+def get_file_category(extension):
+      category = "Others"
+
+      for category_name in file_categories:
+        if extension in file_categories[category_name]:
+            category = category_name
+            break
+
+      return category
+
+def get_unique_destination(destination_folder, file_name):
+
     destination = os.path.join(destination_folder, file_name)
-
+    
     if os.path.exists(destination):
-          counter = 1
 
-    while os.path.exists(destination):
-        new_name = name + "_" + str(counter) + extension
-        destination = os.path.join(destination_folder, new_name)
-        counter += 1
-    shutil.move(full_path, destination)
+        name, extension = os.path.splitext(file_name)
+        counter = 1
+    
+        while os.path.exists(destination):
 
-    print(file_name, "→", category)
-
+            new_name = name + "_" + str(counter) + extension
+            destination = os.path.join(destination_folder, new_name)
+            counter += 1
         
+    return  destination
+
+         
+def organize_files(path):
+
+    file_names = os.listdir(path)
+
+    for file_name in file_names:
+        full_path = os.path.join(path, file_name)
+
+        if not os.path.isfile(full_path):
+            continue
+
+        _, extension = os.path.splitext(file_name)
+        extension = extension.lower()
+
+        category = get_file_category(extension)
+
+        destination_folder = os.path.join(path, category)
+        os.makedirs(destination_folder, exist_ok=True)
+
+        destination = get_unique_destination(
+            destination_folder,
+            file_name
+        )
+
+        shutil.move(full_path, destination)
+
+        print(os.path.basename(destination), "→", category)
+
+def main():
+    path = get_folder_path()
+    organize_files(path)
+
+
+if __name__ == "__main__":
+
+    main()
+
+
+    
