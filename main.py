@@ -15,16 +15,29 @@ file_categories = {
 path=input("Enter folder path: ")
 file_names=os.listdir(path)
 
+
 for file_name in file_names:
 
+    full_path = os.path.join(path, file_name)
+    if not os.path.isfile(full_path):
+        continue
+
     name,extension=os.path.splitext(file_name)
-    category_found = False
+    extension = extension.lower()
+    category = "Others"
 
-    for category in file_categories:
-            if extension in file_categories[category]:
-                category_found = True
+
+    for category_name in file_categories:
+            if extension in file_categories[category_name]:
+                category = category_name
+                break
+
             
+    destination_folder = os.path.join(path, category)
+    os.makedirs(destination_folder, exist_ok=True)
+    destination = os.path.join(destination_folder, file_name)
+    shutil.move(full_path, destination)
+    
+    print(file_name, "→", category)
 
-    if not category_found:
-        category = "Others"
-        print(file_name, "→", category)
+        
