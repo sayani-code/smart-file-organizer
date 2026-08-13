@@ -28,6 +28,10 @@ def get_folder_path():
           
             print("Folder not found.")
             print("Please enter a valid folder path.")
+            
+        except PermissionError:
+            print("Permission denied.")
+            print("Please choose a folder you can access.")
 
 
 
