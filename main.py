@@ -20,7 +20,7 @@ def get_folder_path():
 
         try:
          
-            file_names=os.listdir(path)
+            os.listdir(path)
             return path
             
 
@@ -40,6 +40,18 @@ def get_file_category(extension):
             break
 
       return category
+
+def show_file_types():
+    print("\n","-" * 40)
+    print("          Supported File Types")
+    print("-" * 40)
+
+    for category, extensions in file_categories.items():
+        print(category,":\n")
+        for  extension in extensions:
+            print("   ",extension,end="")
+        print("\n")
+
 
 def get_unique_destination(destination_folder, file_name):
 
@@ -67,7 +79,8 @@ def organize_files(path):
         "Documents": 0,
         "Music": 0,
         "Videos": 0,
-        "Python": 0,
+        "Coding_files": 0,
+        "Archives": 0,
         "Others": 0
     }
 
@@ -114,15 +127,53 @@ def show_statistics(statistics):
      print(f"{'Total files':<12}: {total_files}")
 
 
+def show_menu():
+    while True:
+        print("\n","-"*20)
+        print("         Smart File Organizer")
+        print("-"*20)
+        print("1. Organize files\n2. Show statistics\n3. Show file types\n4. Exit")
+
+        try:
+            choice = int(input("Enter your choice: "))
+
+            if choice in [1, 2, 3, 4]:
+                return choice
+
+            print("\nInvalid choice.")
+            print("Please choose between 1 and 4.")
+
+        except ValueError:
+            print("\nPlease enter a number.")
+
+
 def main():
-    path = get_folder_path()
-    statistics=organize_files(path)
-    show_statistics(statistics)
+    statistics=None
+
+    while True:
+        choice = show_menu()
+        if choice == 1:       
+            path = get_folder_path()
+            statistics=organize_files(path)
+            show_statistics(statistics)
+
+        elif choice == 2:
+            if statistics is None:
+                print("\nNo statistics available.")
+                print("Please organize a folder first.")
+            else:
+                show_statistics(statistics)
+
+        elif choice == 3:
+            show_file_types()
+
+        elif choice == 4:
+            print("\nExiting.........\n")
+            break
 
 
 if __name__ == "__main__":
-
+   
     main()
-
 
     
